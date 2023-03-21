@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         $users = $result->fetch_all(MYSQLI_ASSOC);
 
         header("Content-Type: application/json");
-        echo json_encode($users);
+        echo json_encode(['data'=>$users]);
     }
 
     // get user by uid
@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         $result = mysqli_query($conn, $sql);
         $user = mysqli_fetch_assoc($result);
         header("Content-Type: application/json");
-        echo json_encode($user);
+        echo json_encode(['data' => $user]);
     }
 
     
@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             "is_login" => $is_login
         );
         header("Content-Type: application/json");
-        echo json_encode($user);
+        echo json_encode(['data' => $user]);
     }
 
     // update user
