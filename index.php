@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     // get user by uid
     if (isset($_GET['action']) && $_GET['action'] == 'women') {
         $uid = $_GET["id"];
-        $sql = "SELECT * FROM users WHERE uid='$uid'";
+        $sql = "SELECT * FROM user WHERE uid='$uid'";
         $result = mysqli_query($conn, $sql);
         $user = mysqli_fetch_assoc($result);
         header("Content-Type: application/json");
@@ -70,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
     }
 
     if (isset($_GET['action']) && $_GET['action'] == 'booking') {
-        $did = $_GET["id"];
+        $bid = $_GET["id"];
         $sql = "SELECT * FROM booking WHERE bid='$bid'";
         $result = mysqli_query($conn, $sql);
         $booking = mysqli_fetch_assoc($result);
@@ -82,8 +82,11 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
 
 // handle POST request
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+  
     // create user
     if (isset($_GET['action']) && $_GET['action'] == 'insert-women') {
+        $_POST = (array)json_decode(file_get_contents("php://input"));
         $uname = $_POST["uname"];
         $email = $_POST["email"];
         $password = $_POST["password"];
@@ -106,6 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // update user
     if (isset($_GET['action']) && $_GET['action'] == 'update-women') {
+        $_POST = (array)json_decode(file_get_contents("php://input"));
         $uid = $_POST["uid"];
         $uname = $_POST["uname"];
         $email = $_POST["email"];
@@ -127,6 +131,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
         // Get input data
         if (isset($_GET['action']) && $_GET['action'] == 'insert-driver') {
+            $_POST = (array)json_decode(file_get_contents("php://input"));
             $dname = $_POST['dname'];
             $dpass = $_POST['dpass'];
             $dphone = $_POST['dphone'];
@@ -143,11 +148,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $cabno = $_POST['cabno'];
             $status = $_POST['status'];
             $login = $_POST['login'];
-            $sql = "INSERT INTO driver (dname, dpass, dphone, demail, driverno, loc, pincode, charges, available, stime, etime, cab, date, cabno, status, login)
-            VALUES ('$dname', '$dpass', '$dphone', '$demail', '$driverno', '$loc', '$pincode', '$charges', '$available', '$stime', '$etime', '$cab', '$date', '$cabno', '$status', '$login')";
+            $sql = "INSERT INTO driver (did,dname, dpass, dphone, demail, driverno, loc, pincode, charges, available, stime, etime, cab, date, cabno, status, login)
+            VALUES (NULL,'$dname', '$dpass', '$dphone', '$demail', '$driverno', '$loc', '$pincode', '$charges', '$available', '$stime', '$etime', '$cab', '$date', '$cabno', '$status', '$login')";
             mysqli_query($conn, $sql);
             $driver = array(
-                "did" => $did,
                 "dname" => $dname,
                 "dpass" => $dpass,
                 "demail" => $demail,
@@ -166,10 +170,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 "login" => $login,
             );
             header("Content-Type: application/json");
-            echo json_encode($driver);
+            echo json_encode(['error'=>false,'data'=>$driver]);
         }
 
         if (isset($_GET['action']) && $_GET['action'] == 'update-driver'){
+            $_POST = (array)json_decode(file_get_contents("php://input"));
+            $did = $_POST['did'];
             $dname = $_POST['dname'];
             $dpass = $_POST['dpass'];
             $dphone = $_POST['dphone'];
@@ -213,16 +219,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (isset($_GET['action']) && $_GET['action'] == 'insert-booking') {
+        $_POST = (array)json_decode(file_get_contents("php://input"));
         $uid = $_POST['uid'];
         $did = $_POST['did'];
         $pickupadd = $_POST['pickupadd'];
         $dropadd = $_POST['dropadd'];
         $status = $_POST['status'];
         $price = $_POST['price'];
-        $sql = "INSERT INTO booking (uid, did, pickupadd, dropadd, status, price) VALUES ('$uid', '$did', '$pickupadd', '$dropadd', '$status', '$price')";
+        $sql = "INSERT INTO booking (bid,uid, did, pickupadd, dropadd, status, price) VALUES (NULL,'$uid', '$did', '$pickupadd', '$dropadd', '$status', '$price')";
         mysqli_query($conn, $sql);
         $booking = array(
-            "bid" => $bid,
             "uid" => $uid,
             "did" => $did,
             "pickupadd" => $pickupadd,
@@ -235,6 +241,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (isset($_GET['action']) && $_GET['action'] == 'update-booking') {
+        $_POST = (array)json_decode(file_get_contents("php://input"));
+        $bid = $_POST['bid'];
         $uid = $_POST['uid'];
         $did = $_POST['did'];
         $pickupadd = $_POST['pickupadd'];
