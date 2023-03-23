@@ -15,7 +15,8 @@ if (!$conn) {
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
     // get all users
     if (isset($_GET['action']) && $_GET['action'] == 'women-all') {
-        $sql = "SELECT * FROM user";
+        // $sql = "SELECT `uid`, `uname`, `phone`,`email`, `password`, `is_login` FROM `user`";
+        $sql = "SELECT * FROM `user`";
         $result = $conn->query($sql);
         // $res = [];
         // while ($obj = $result->fetch_object()) {
