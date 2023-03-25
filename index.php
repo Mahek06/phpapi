@@ -11,8 +11,13 @@ $conn = mysqli_connect($host, $username, $password, $dbname);
 if (!$conn) {
     die("Connection failed: " . mysqli_connect_error());
 }
+header('Access-Control-Allow-Origin: *');
+header("Content-Type: application/json");
+$data = json_decode(file_get_contents('php://input'), true);
+echo json_encode($data);
+die;
+
 // handle GET request
-if ($_SERVER["REQUEST_METHOD"] == "GET") {
     // get all users
     if (isset($_GET['action']) && $_GET['action'] == 'women-all') {
         // $sql = "SELECT `uid`, `uname`, `phone`,`email`, `password`, `is_login` FROM `user`";
@@ -78,34 +83,35 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         header("Content-Type: application/json");
         echo json_encode(['data' => $booking]);
     }
-
-}
-
-// handle POST request
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
-  
     // create user
     if (isset($_GET['action']) && $_GET['action'] == 'insert-women') {
-        $_POST = (array)json_decode(file_get_contents("php://input"));
-        $uname = $_POST["uname"];
-        $email = $_POST["email"];
-        $password = $_POST["password"];
-        $phone = $_POST["phone"];
-        $is_login = isset($_POST["is_login"]) ? 1 : 0;
-        $sql = "INSERT INTO user (uname, email, password, phone, is_login) VALUES ('$uname', '$email', '$password', '$phone', '$is_login')";
-        mysqli_query($conn, $sql);
-        $uid = mysqli_insert_id($conn);
-        $user = array(
-            "uid" => $uid,
-            "uname" => $uname,
-            "email" => $email,
-            "password" => $password,
-            "phone" => $phone,
-            "is_login" => $is_login
-        );
-        header("Content-Type: application/json");
-        echo json_encode(['data' => $user]);
+        try{
+
+
+            // $_POST = (array)json_decode(file_get_contents("php://input"));
+            $uname = $_POST["uname"];
+            $email = $_POST["email"];
+            $password = $_POST["password"];
+            $phone = $_POST["phone"];
+            $is_login = isset($_POST["is_login"]) ? 1 : 0;
+            $sql = "INSERT INTO user (uname, email, password, phone, is_login) VALUES ('$uname', '$email', '$password', '$phone', '$is_login')";
+            mysqli_query($conn, $sql);
+            $uid = mysqli_insert_id($conn);
+            $user = array(
+                "uid" => $uid,
+                "uname" => $uname,
+                "email" => $email,
+                "password" => $password,
+                "phone" => $phone,
+                "is_login" => $is_login
+            );
+            header("Content-Type: application/json");
+            echo json_encode(['data' => $user]);
+        }catch(Exception $e){
+            header("Content-Type: application/json");
+            echo json_encode(['error' => $e.getMessage()]);
+        }
+
     }
 
     // update user
@@ -264,5 +270,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Content-Type: application/json");
         echo json_encode($booking);
     }
-
-}
