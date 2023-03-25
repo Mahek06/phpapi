@@ -15,6 +15,7 @@ header('Access-Control-Allow-Origin: *');
 header("Content-Type: application/json");
 $data = json_decode(file_get_contents('php://input'), true);
 echo json_encode($data);
+echo json_encode($_POST);
 die;
 
 // handle GET request
