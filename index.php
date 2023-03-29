@@ -13,10 +13,7 @@ if (!$conn) {
 }
 header('Access-Control-Allow-Origin: *');
 header("Content-Type: application/json");
-$data = json_decode(file_get_contents('php://input'), true);
-echo json_encode($data);
-echo json_encode($_POST);
-die;
+
 
 // handle GET request
     // get all users
@@ -87,9 +84,7 @@ die;
     // create user
     if (isset($_GET['action']) && $_GET['action'] == 'insert-women') {
         try{
-
-
-            // $_POST = (array)json_decode(file_get_contents("php://input"));
+            $_POST = (array)json_decode(file_get_contents("php://input"));
             $uname = $_POST["uname"];
             $email = $_POST["email"];
             $password = $_POST["password"];
@@ -144,36 +139,28 @@ die;
             $dpass = $_POST['dpass'];
             $dphone = $_POST['dphone'];
             $demail = $_POST['demail'];
-            $driverno = $_POST['driverno'];
-            $loc = $_POST['loc'];
-            $pincode = $_POST['pincode'];
-            $charges = $_POST['charges'];
-            $available = $_POST['available'];
-            $stime = $_POST['stime'];
-            $etime = $_POST['etime'];
-            $cab = $_POST['cab'];
-            $date = $_POST['date'];
-            $cabno = $_POST['cabno'];
-            $status = $_POST['status'];
-            $login = $_POST['login'];
-            $sql = "INSERT INTO driver (did,dname, dpass, dphone, demail, driverno, loc, pincode, charges, available, stime, etime, cab, date, cabno, status, login)
-            VALUES (NULL,'$dname', '$dpass', '$dphone', '$demail', '$driverno', '$loc', '$pincode', '$charges', '$available', '$stime', '$etime', '$cab', '$date', '$cabno', '$status', '$login')";
+            // $driverno = $_POST['driverno'];
+            // $loc = $_POST['loc'];
+            // $pincode = $_POST['pincode'];
+            // $charges = $_POST['charges'];
+            // $available = $_POST['available'];
+            // $stime = $_POST['stime'];
+            // $etime = $_POST['etime'];
+            // $cab = $_POST['cab'];
+            // $date = $_POST['date'];
+            // $cabno = $_POST['cabno'];
+            $status = 'pending';
+            $login = 0;
+            $sql = "INSERT INTO driver (did,dname, dpass, dphone, demail, status, login)
+            VALUES (NULL,'$dname', '$dpass', '$dphone', '$demail', '$status', '$login')";
             mysqli_query($conn, $sql);
+            $did = mysqli_insert_id($conn);
             $driver = array(
+                "did" => $did,
                 "dname" => $dname,
                 "dpass" => $dpass,
                 "demail" => $demail,
                 "dphone" => $dphone,
-                "driverno" => $driverno,
-                "loc" => $loc,
-                "pincode" => $pincode,
-                "charges" => $charges,
-                "available" => $available,
-                "stime" => $stime,
-                "etime" => $etime,
-                "cab" => $cab,
-                "date" => $date,
-                "cabno" => $cabno,
                 "status" => $status,
                 "login" => $login,
             );
@@ -191,7 +178,7 @@ die;
             $driverno = $_POST['driverno'];
             $loc = $_POST['loc'];
             $pincode = $_POST['pincode'];
-            $charges = $_POST['charges'];
+            // $charges = $_POST['charges'];
             $available = $_POST['available'];
             $stime = $_POST['stime'];
             $etime = $_POST['etime'];
@@ -200,7 +187,7 @@ die;
             $cabno = $_POST['cabno'];
             $status = $_POST['status'];
             $login = $_POST['login'];
-            $sql = "UPDATE driver SET dname='$dname', dpass='$dpass', dphone='$dphone', demail='$demail', driverno='$driverno', loc='$loc', pincode='$pincode', charges='$charges', available='$available', stime='$stime', etime='$etime', cab='$cab', date='$date', cabno='$cabno', status='$status', login='$login'
+            $sql = "UPDATE driver SET dname='$dname', dpass='$dpass', dphone='$dphone', demail='$demail', driverno='$driverno', loc='$loc', pincode='$pincode', available='$available', stime='$stime', etime='$etime', cab='$cab', date='$date', cabno='$cabno', `status`='$status', login='$login'
             WHERE did='$did'";
             mysqli_query($conn, $sql);
             $driver = array(
@@ -212,7 +199,6 @@ die;
                 "driverno" => $driverno,
                 "loc" => $loc,
                 "pincode" => $pincode,
-                "charges" => $charges,
                 "available" => $available,
                 "stime" => $stime,
                 "etime" => $etime,
