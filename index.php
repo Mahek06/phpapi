@@ -187,8 +187,7 @@ header("Content-Type: application/json");
             $cabno = $_POST['cabno'];
             $status = $_POST['status'];
             $login = $_POST['login'];
-            $sql = "UPDATE driver SET dname='$dname', dpass='$dpass', dphone='$dphone', demail='$demail', driverno='$driverno', loc='$loc', pincode='$pincode', available='$available', stime='$stime', etime='$etime', cab='$cab', date='$date', cabno='$cabno', `status`='$status', login='$login'
-            WHERE did='$did'";
+            $sql = "UPDATE driver SET dname='$dname', dpass='$dpass', dphone='$dphone', demail='$demail', driverno='$driverno', loc='$loc', pincode='$pincode', available='$available', stime='$stime', etime='$etime', cab='$cab', date='$date', cabno='$cabno', `status`='$status', login='$login' WHERE did=$did";
             mysqli_query($conn, $sql);
             $driver = array(
                 "did" => $did,
@@ -209,7 +208,7 @@ header("Content-Type: application/json");
                 "login" => $login,
             );
         header("Content-Type: application/json");
-        echo json_encode($driver);
+        echo json_encode(['data' => $driver,'query' => $sql]);
     }
 
     if (isset($_GET['action']) && $_GET['action'] == 'insert-booking') {
@@ -257,3 +256,4 @@ header("Content-Type: application/json");
         header("Content-Type: application/json");
         echo json_encode($booking);
     }
+    
